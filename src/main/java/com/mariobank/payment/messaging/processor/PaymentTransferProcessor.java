@@ -35,7 +35,7 @@ public class PaymentTransferProcessor {
         paymentStatus.setTransactionStatus(paymentTransferMessage.getPaymentTransferStatus());
         if (paymentStatus.getTransactionStatus().equals(PAYMENT_FAIL))
         {
-            paymentStatus.setFailureReason("Transfer amount "+paymentTransferMessage.getAmount()+" is more than allowed limit "+C2C_PAYMENT_DAILY_LIMIT);
+            paymentStatus.setFailureReason("Transfer amount "+paymentTransferMessage.getAmount()+" exceeds daily transfer limit of "+C2C_PAYMENT_DAILY_LIMIT);
         }
         //persist
         PaymentStatusRepository.getInstance().add(paymentStatus);
