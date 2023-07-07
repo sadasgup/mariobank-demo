@@ -10,6 +10,8 @@ public class PaymentStatus {
 
     private String transactionId;
 
+    private String failureReason = "N/A";
+
     public String getPaymentType() {
         return paymentType;
     }
@@ -40,6 +42,14 @@ public class PaymentStatus {
 
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
     }
 
 }

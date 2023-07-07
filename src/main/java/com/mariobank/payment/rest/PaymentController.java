@@ -18,8 +18,7 @@ public class PaymentController {
     @Path("/transfer")
     @Produces(MediaType.TEXT_PLAIN)
     public String processTransfer(PaymentRequest paymentRequest) {
-        String transactionId = paymentTransferResource.process(paymentRequest);
-        return transactionId;
+        return paymentTransferResource.process(paymentRequest);
     }
 
     @GET

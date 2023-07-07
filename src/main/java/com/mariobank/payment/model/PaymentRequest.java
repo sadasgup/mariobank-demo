@@ -1,5 +1,7 @@
 package com.mariobank.payment.model;
 
+import io.quarkus.runtime.util.StringUtil;
+
 public class PaymentRequest {
 
     private String paymentType;
@@ -11,7 +13,7 @@ public class PaymentRequest {
     private Integer destinationAccount;
 
     public String getPaymentType() {
-        return paymentType;
+        return StringUtil.isNullOrEmpty(paymentType) ? "C2C" : paymentType;
     }
 
     public void setPaymentType(String paymentType) {

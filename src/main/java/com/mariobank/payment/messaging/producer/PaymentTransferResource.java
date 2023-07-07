@@ -1,5 +1,6 @@
 package com.mariobank.payment.messaging.producer;
 
+import com.mariobank.payment.constants.PaymentType;
 import com.mariobank.payment.messaging.model.PaymentTransferMessage;
 import com.mariobank.payment.model.PaymentRequest;
 import jakarta.ws.rs.BadRequestException;
@@ -7,6 +8,8 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import java.util.UUID;
+
+import static com.mariobank.payment.constants.PaymentTransferConstants.*;
 
 public class PaymentTransferResource {
 
@@ -18,17 +21,29 @@ public class PaymentTransferResource {
 
     public String process(PaymentRequest paymentRequest)
     {
-        UUID uuid = UUID.randomUUID();
+        String transactionId = UUID.randomUUID().toString();
+        //validate payment and execute transfer
+        //...
         //send message to queue
         PaymentTransferMessage paymentTransferMessage = new PaymentTransferMessage(paymentRequest);
-        paymentTransferMessage.setTransactionId(uuid.toString());
-        if ("C2C".equals(paymentRequest.getPaymentType())) {
+        paymentTransferMessage.setTransactionId(transactionId);
+        paymentTransferMessage.setPaymentTransferStatus(isLegit(paymentRequest) ? PAYMENT_PASS : PAYMENT_FAIL);
+        if (PaymentType.C2C.toString().equals(paymentRequest.getPaymentType())) {
             c2cRequestEmitter.send(paymentTransferMessage);
-        } else if ("B2C".equals(paymentRequest.getPaymentType())) {
+        } else if (PaymentType.B2C.toString().equals(paymentRequest.getPaymentType())) {
             b2cRequestEmitter.send(paymentTransferMessage);
         } else {
             throw new BadRequestException("Invalid payment type");
         }
-        return uuid.toString();
+        return transactionId;
+    }
+
+    private boolean isLegit(PaymentRequest paymentRequest) {
+        String paymentType = paymentRequest.getPaymentType();
+        if (paymentType.equals(PaymentType.C2C.toString()))
+        {
+            return paymentRequest.getAmount() < C2C_PAYMENT_DAILY_LIMIT;
+        }
+        return true;
     }
 }
