@@ -1,12 +1,21 @@
 package com.mariobank.payment.model;
 
+import com.mariobank.payment.constants.PaymentTransferConstants;
+
+import static com.mariobank.payment.constants.PaymentTransferConstants.PAYMENT_TRANSFER_SUCCESS;
+import static com.mariobank.payment.constants.PaymentTransferConstants.PAYMENT_TRANSFER_TRANSACTION_ID_PREFIX;
+
 public class PaymentStatus {
 
     private String paymentType;
 
+    private Integer sourceAccount;
+
+    private Integer destinationAccount;
+
     private Double amount;
 
-    private String transactionStatus = "PASS";
+    private String transactionStatus;
 
     private String transactionId;
 
@@ -18,6 +27,22 @@ public class PaymentStatus {
 
     public void setPaymentType(String paymentType) {
         this.paymentType = paymentType;
+    }
+
+    public Integer getSourceAccount() {
+        return sourceAccount;
+    }
+
+    public void setSourceAccount(Integer sourceAccount) {
+        this.sourceAccount = sourceAccount;
+    }
+
+    public Integer getDestinationAccount() {
+        return destinationAccount;
+    }
+
+    public void setDestinationAccount(Integer destinationAccount) {
+        this.destinationAccount = destinationAccount;
     }
 
     public Double getAmount() {
@@ -37,6 +62,10 @@ public class PaymentStatus {
     }
 
     public String getTransactionId() {
+        if (transactionId.startsWith(PAYMENT_TRANSFER_TRANSACTION_ID_PREFIX))
+        {
+            transactionId = transactionId.split(PAYMENT_TRANSFER_TRANSACTION_ID_PREFIX,2)[1];
+        }
         return transactionId;
     }
 

@@ -3,6 +3,7 @@ package com.mariobank.payment.messaging.producer;
 import com.mariobank.payment.constants.PaymentType;
 import com.mariobank.payment.messaging.model.PaymentTransferMessage;
 import com.mariobank.payment.model.PaymentRequest;
+import io.quarkus.runtime.util.StringUtil;
 import jakarta.ws.rs.BadRequestException;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -19,15 +20,13 @@ public class PaymentTransferResource {
     @Channel("b2c-queue")
     Emitter<PaymentTransferMessage> b2cRequestEmitter;
 
-    public String process(PaymentRequest paymentRequest)
-    {
-        String transactionId = UUID.randomUUID().toString();
-        //validate payment and execute transfer
-        //...
-        //send message to queue
+    public String process(PaymentRequest paymentRequest) {
+        String transactionId =
+                StringUtil.isNullOrEmpty(paymentRequest.getTransactionId()) ?
+                                UUID.randomUUID().toString() : paymentRequest.getTransactionId();
+        //send message to kafka topic
         PaymentTransferMessage paymentTransferMessage = new PaymentTransferMessage(paymentRequest);
-        paymentTransferMessage.setTransactionId(transactionId);
-        paymentTransferMessage.setPaymentTransferStatus(isLegit(paymentRequest) ? PAYMENT_PASS : PAYMENT_FAIL);
+        paymentTransferMessage.setTransactionId(PAYMENT_TRANSFER_TRANSACTION_ID_PREFIX + transactionId);
         if (PaymentType.C2C.toString().equals(paymentRequest.getPaymentType())) {
             c2cRequestEmitter.send(paymentTransferMessage);
         } else if (PaymentType.B2C.toString().equals(paymentRequest.getPaymentType())) {
@@ -36,14 +35,5 @@ public class PaymentTransferResource {
             throw new BadRequestException("Invalid payment type");
         }
         return transactionId;
-    }
-
-    private boolean isLegit(PaymentRequest paymentRequest) {
-        String paymentType = paymentRequest.getPaymentType();
-        if (paymentType.equals(PaymentType.C2C.toString()))
-        {
-            return paymentRequest.getAmount() < C2C_PAYMENT_DAILY_LIMIT;
-        }
-        return true;
     }
 }

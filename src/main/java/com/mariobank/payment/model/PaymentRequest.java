@@ -12,6 +12,8 @@ public class PaymentRequest {
 
     private Integer destinationAccount;
 
+    private String transactionId;
+
     public String getPaymentType() {
         return StringUtil.isNullOrEmpty(paymentType) ? "C2C" : paymentType;
     }
@@ -42,5 +44,13 @@ public class PaymentRequest {
 
     public void setDestinationAccount(Integer destinationAccount) {
         this.destinationAccount = destinationAccount;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 }

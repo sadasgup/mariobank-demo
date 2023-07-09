@@ -1,6 +1,7 @@
 package com.mariobank.payment.messaging.model;
 
 import com.mariobank.payment.model.PaymentRequest;
+import io.quarkus.runtime.util.StringUtil;
 
 public class PaymentTransferMessage {
 
@@ -10,8 +11,9 @@ public class PaymentTransferMessage {
 
     private String transactionId;
 
-    private String paymentTransferStatus;
+    private Integer sourceAccount;
 
+    private Integer destinationAccount;
 
     public PaymentTransferMessage()
     {
@@ -22,6 +24,9 @@ public class PaymentTransferMessage {
     {
         this.paymentType = paymentRequest.getPaymentType();
         this.amount = paymentRequest.getAmount();
+        this.transactionId = paymentRequest.getTransactionId();
+        this.sourceAccount = paymentRequest.getSourceAccount();
+        this.destinationAccount = paymentRequest.getDestinationAccount();
     }
 
     public String getPaymentType() {
@@ -45,14 +50,24 @@ public class PaymentTransferMessage {
     }
 
     public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+        if (StringUtil.isNullOrEmpty(this.transactionId)) {
+            this.transactionId = transactionId;
+        }
     }
 
-    public String getPaymentTransferStatus() {
-        return paymentTransferStatus;
+    public Integer getSourceAccount() {
+        return sourceAccount;
     }
 
-    public void setPaymentTransferStatus(String paymentTransferStatus) {
-        this.paymentTransferStatus = paymentTransferStatus;
+    public void setSourceAccount(Integer sourceAccount) {
+        this.sourceAccount = sourceAccount;
+    }
+
+    public Integer getDestinationAccount() {
+        return destinationAccount;
+    }
+
+    public void setDestinationAccount(Integer destinationAccount) {
+        this.destinationAccount = destinationAccount;
     }
 }

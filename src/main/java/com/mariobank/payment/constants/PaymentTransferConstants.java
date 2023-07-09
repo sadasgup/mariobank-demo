@@ -2,7 +2,8 @@ package com.mariobank.payment.constants;
 
 public class PaymentTransferConstants {
 
-    public static final double C2C_PAYMENT_DAILY_LIMIT = 150000.0;
-    public static final String PAYMENT_PASS = "PASS";
-    public static final String PAYMENT_FAIL = "FAIL";
+    public static final String PAYMENT_TRANSFER_SUCCESS = "SUCCESS";
+    public static final String PAYMENT_TRANSFER_FAILURE = "FAILURE";
+    public static final String PAYMENT_TRANSFER_TRANSACTION_ID_PREFIX = "MB_TNX_";
+    public static final String INVALID_TRANSACTION_ID = "Invalid transaction id";
 }
